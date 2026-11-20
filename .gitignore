@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+data/
+_edge/
+out/
+*.zip
+estimated_trajectory.txt
+metadata.json
+final_table.json
+tools/_perf_est.txt
+.DS_Store

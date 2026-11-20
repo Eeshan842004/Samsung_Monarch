@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Path Finder Trajectory Viewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* One visual world: the dark navy of the Track 03 deck. Layout: summary strip, then a two-column
+     workbench (large top view | side view + metrics), then the error timeline, then how it works. */
+  :root {
+    color-scheme: dark;
+    --bg: #0a0e1a;
+    --panel: #111827;
+    --panel-2: #0d1b3e;
+    --line: #1e2a3e;
+    --ink: #e8edf5;
+    --mute: #9aa7b4;
+    --ours: #0e9cc2;
+    --ours-hi: #38bdf8;
+    --blind: #d07e08;
+    --truth: #8a94a0;
+    --good: #2fbf8f;
+    --display: "Sora", "Segoe UI", system-ui, sans-serif;
+    --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Menlo, monospace;
+    --r: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font: 15px/1.5 var(--body); }
+  a { color: var(--ours-hi); }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+  @media (max-width: 600px) { .wrap { padding: 0 16px; } }
+
+  header.top { border-bottom: 1px solid var(--line); background: linear-gradient(180deg, #0d1530, var(--bg)); }
+  .top .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding-top: 16px; padding-bottom: 16px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand svg { flex: none; }
+  .brand h1 { font: 600 20px/1.1 var(--display); margin: 0; letter-spacing: 0.2px; }
+  .brand p { margin: 2px 0 0; color: var(--mute); font-size: 13px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 12px;
+          border: 1px solid var(--line); color: var(--mute); background: var(--panel); white-space: nowrap; }
+  .chip b { color: var(--ink); font-weight: 600; }
+  .team { margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .intro { padding: 28px 0 8px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: end; }
+  @media (max-width: 900px) { .intro { grid-template-columns: 1fr; } }
+  .intro h2 { font: 600 30px/1.18 var(--display); margin: 0 0 10px; text-wrap: balance; }
+  .intro h2 em { font-style: normal; color: var(--ours-hi); }
+  .intro p { margin: 0; color: var(--mute); max-width: 62ch; }
+  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .tile { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; }
+  .tile .v { font: 600 24px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+  .tile .l { font-size: 12px; color: var(--mute); margin-top: 2px; }
+  .bar { height: 5px; border-radius: 3px; background: var(--line); margin-top: 9px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--ours); border-radius: 3px; }
+
+  .flightbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 22px 0 12px; }
+  .flightbar .lbl { color: var(--mute); font-size: 13px; margin-right: 4px; }
+  .tab { appearance: none; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 10px;
+         padding: 8px 14px; font: 500 14px var(--body); cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
+  .tab small { color: var(--mute); font-weight: 400; }
+  .tab:hover { border-color: #33435e; }
+  .tab[aria-selected="true"] { border-color: var(--ours); background: var(--panel-2); box-shadow: 0 0 0 1px var(--ours) inset; }
+  .tab:focus-visible, button:focus-visible, input:focus-visible, label.drop:focus-within { outline: 2px solid var(--ours-hi); outline-offset: 2px; }
+
+  .bench { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 16px; }
+  @media (max-width: 960px) { .bench { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; min-width: 0; }
+  .card h3 { font: 600 14px/1.2 var(--display); margin: 0; letter-spacing: 0.3px; }
+  .card .head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+  .card .sub { color: var(--mute); font-size: 12px; }
+  canvas { display: block; width: 100%; border-radius: 10px; background: #0b1222; touch-action: none; }
+  #top { aspect-ratio: 4 / 3; }
+  #side { aspect-ratio: 16 / 7; }
+  #err { height: 190px; }
+  .side-col { display: grid; gap: 16px; align-content: start; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--mute); margin-top: 10px; }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .sw { width: 18px; height: 4px; border-radius: 2px; display: inline-block; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; background: var(--ink); }
+
+  .player { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+  .btn { appearance: none; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); border-radius: 10px;
+         padding: 8px 14px; font: 600 14px var(--body); cursor: pointer; min-width: 84px; }
+  .btn:hover { border-color: var(--ours); }
+  input[type=range] { flex: 1; accent-color: var(--ours); min-width: 0; }
+  .clock { font: 500 13px var(--mono); color: var(--mute); min-width: 11ch; text-align: right; font-variant-numeric: tabular-nums; }
+  .phase { font-size: 12px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
+  .phase.sensed { color: var(--ours-hi); border-color: #164e63; }
+  .phase.blind { color: #f0a640; border-color: #6b4206; }
+
+  table.m { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.m td { padding: 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.m td:last-child { text-align: right; font: 500 14px var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 12px; }
+  table.m tr:last-child td { border-bottom: 0; }
+  .win { color: var(--good); }
+  .pill { display: inline-block; font: 600 12px var(--body); padding: 2px 8px; border-radius: 999px; background: #0f3a2d; color: var(--good); }
+  .pill.off { background: #2a2f3a; color: var(--mute); }
+
+  .drops { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 520px) { .drops { grid-template-columns: 1fr; } }
+  label.drop { display: block; border: 1.5px dashed #33435e; border-radius: 12px; padding: 12px; cursor: pointer; font-size: 13px; }
+  label.drop:hover { border-color: var(--ours); }
+  label.drop b { display: block; font-weight: 600; margin-bottom: 2px; }
+  label.drop span { color: var(--mute); }
+  label.drop input { width: 100%; margin-top: 8px; color: var(--mute); font-size: 12px; }
+  #msg { min-height: 1.4em; color: var(--mute); font-size: 13px; margin-top: 8px; }
+
+  .timeline { margin-top: 16px; }
+  .how { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 28px 0 8px; }
+  @media (max-width: 900px) { .how { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .how { grid-template-columns: 1fr; } }
+  .step { border-top: 2px solid var(--line); padding-top: 12px; }
+  .step .n { font: 500 12px var(--mono); color: var(--ours-hi); }
+  .step h4 { font: 600 15px/1.3 var(--display); margin: 4px 0 6px; }
+  .step p { margin: 0; color: var(--mute); font-size: 13.5px; }
+  .eq { font: 500 13px var(--mono); color: var(--ink); background: #0b1222; border: 1px solid var(--line); border-radius: 8px; padding: 2px 7px; white-space: nowrap; }
+  footer { border-top: 1px solid var(--line); margin-top: 28px; padding: 18px 0 30px; color: var(--mute); font-size: 13px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+        <rect width="34" height="34" rx="9" fill="#0d1b3e"/>
+        <path d="M7 24 C11 9, 18 27, 27 10" fill="none" stroke="#0e9cc2" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="27" cy="10" r="3" fill="#d07e08"/>
+      </svg>
+      <div>
+        <h1>Path Finder</h1>
+        <p>IMU-only trajectory under sensor degradation</p>
+      </div>
+    </div>
+    <span class="chip">Samsung XR Hackathon 2026 &middot; <b>Track 03</b></span>
+    <div class="team">
+      <span class="chip">Team <b>MONARCH</b></span>
+      <span class="chip"><b>VIT Vellore</b></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="intro" aria-label="Summary">
+    <div>
+      <h2>One degraded IMU, no GPS, no camera. <em>2.49&nbsp;m</em> average error where standing still scores 3.45&nbsp;m.</h2>
+      <p>Pick a flight to watch our estimate against the motion-capture truth, including the final five seconds after the sensor dies. Or load your own <code>estimated_trajectory.txt</code>. Everything runs in this page.</p>
+    </div>
+    <div class="tiles">
+      <div class="tile"><div class="v">2.49 m</div><div class="l">Mean ATE, 11 EuRoC flights, degraded</div><div class="bar" aria-hidden="true"><i style="width:72%"></i></div></div>
+      <div class="tile"><div class="v">1.74 m</div><div class="l">Mean ATE in the blind final 5 s</div><div class="bar" aria-hidden="true"><i style="width:50%"></i></div></div>
+      <div class="tile"><div class="v">1&ndash;3 ms</div><div class="l">Compute per second of data (budget 20)</div><div class="bar" aria-hidden="true"><i style="width:15%"></i></div></div>
+      <div class="tile"><div class="v">4.1 MB</div><div class="l">Peak heap (budget 8 MB)</div><div class="bar" aria-hidden="true"><i style="width:51%"></i></div></div>
+    </div>
+  </section>
+
+  <div class="flightbar" role="tablist" aria-label="Flight">
+    <span class="lbl">Flight</span>
+    <span id="tabs" style="display:contents"></span>
+    <button class="tab" id="tab-own" role="tab" aria-selected="false" type="button">Your file</button>
+  </div>
+
+  <section class="bench">
+    <div class="card">
+      <div class="head">
+        <h3>Top view</h3>
+        <span class="sub" id="topsub">aligned with one rotation and translation, like evo_ape -a</span>
+      </div>
+      <canvas id="top" aria-label="Top view of the estimated and true trajectory" role="img"></canvas>
+      <div class="player">
+        <button class="btn" id="play" type="button">Play</button>
+        <input id="scrub" type="range" min="0" max="1000" value="1000" aria-label="Time in flight">
+        <span class="clock" id="clock">0.0 s</span>
+        <span class="phase sensed" id="phase">sensor working</span>
+      </div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--truth)"></i>Motion-capture truth</span>
+        <span><i class="sw" style="background:var(--ours)"></i>Our estimate</span>
+        <span><i class="sw" style="background:var(--blind)"></i>Blind final 5 s (no sensor)</span>
+        <span><i class="dot"></i>Dropout (missing samples)</span>
+      </div>
+    </div>
+
+    <div class="side-col">
+      <div class="card">
+        <div class="head"><h3>Side view</h3><span class="sub">height over x</span></div>
+        <canvas id="side" aria-label="Side view of the trajectory" role="img"></canvas>
+      </div>
+      <div class="card" id="metrics-card">
+        <div class="head"><h3 id="mtitle">This flight</h3><span class="sub" id="msub"></span></div>
+        <table class="m" aria-label="Metrics for this flight"><tbody id="mbody"></tbody></table>
+      </div>
+      <div class="card" id="own-card" hidden>
+        <div class="head"><h3>Load your files</h3><span class="sub">TUM or EuRoC format</span></div>
+        <div class="drops">
+          <label class="drop"><b>Estimated trajectory</b><span>timestamp tx ty tz qx qy qz qw</span>
+            <input id="fEst" type="file" accept=".txt,.tum,.csv"></label>
+          <label class="drop"><b>Ground truth (optional)</b><span>TUM text or EuRoC data.csv</span>
+            <input id="fGt" type="file" accept=".txt,.tum,.csv"></label>
+        </div>
+        <div id="msg" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card timeline">
+    <div class="head">
+      <h3>Position error over the flight</h3>
+      <span class="sub">distance to the truth after alignment; hover to follow the marker</span>
+    </div>
+    <canvas id="err" aria-label="Position error over time" role="img"></canvas>
+  </section>
+
+  <section class="how" aria-label="How it works">
+    <div class="step"><div class="n">01 &middot; stream</div><h4>Clean and preintegrate</h4><p>The CSV is read in 2048-row chunks. Dead, stuck and spike samples are dropped; the rest is compressed into 20 Hz preintegration nodes.</p></div>
+    <div class="step"><div class="n">02 &middot; solve</div><h4>Fit the drift, don't filter it</h4><p>Drift is the double integral of a few sensor errors and is linear in them. One least-squares solve under a bounded-motion prior removes it.</p></div>
+    <div class="step"><div class="n">03 &middot; physics</div><h4>Rotor drag as a speedometer</h4><p>Sideways to the thrust, a multirotor's accelerometer feels only drag: <span class="eq">f = &minus;&mu; v + c</span>. &mu; is calibrated from each file and switched off when absent.</p></div>
+    <div class="step"><div class="n">04 &middot; output</div><h4>A pose for every row</h4><p>Each dropout over 0.3 s gets its own unknowns. The final 5 s are never trusted: the pose is held, the safest policy we measured.</p></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Team MONARCH &middot; VIT Vellore &middot; Eshan, Harshita Kumar</span>
+    <span>Demo flights: EuRoC MAV through the organisers' degrade_imu.py. Per-flight numbers computed in this page; 11-flight means from tools/final_table.py.</span>
+  </div>
+</footer>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const CSS = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let DATA = null, F = null, frac = 1, playing = false, last = 0, hoverT = null;
+
+/* ---------- parsing (own files) ---------- */
+function parseTraj(text) {
+  const out = [];
+  for (const line of text.split(/\r?\n/)) {
+    if (!line || line[0] === "#" || /^[a-zA-Z]/.test(line)) continue;
+    const f = line.split(/[\s,]+/).filter(Boolean);
+    if (f.length < 4) continue;
+    let t = parseFloat(f[0]);
+    if (t > 1e14) t = Number(BigInt(f[0].split(".")[0]) / 1000n) / 1e6;     // nanoseconds
+    const p = [parseFloat(f[1]), parseFloat(f[2]), parseFloat(f[3])];
+    if (Number.isFinite(t) && p.every(Number.isFinite)) out.push([t, p[0], p[1], p[2]]);
+  }
+  return out;
+}
+
+/* ---------- maths ---------- */
+function nearest(ts, t) {
+  let lo = 0, hi = ts.length - 1;
+  while (hi - lo > 1) { const m = (lo + hi) >> 1; if (ts[m] < t) lo = m; else hi = m; }
+  return Math.abs(ts[lo] - t) <= Math.abs(ts[hi] - t) ? lo : hi;
+}
+// Horn's closed form: rotation R and translation t minimising |R e + t - g|^2 (no scale), as evo -a
+function align(E, G) {
+  const n = E.length, me = [0, 0, 0], mg = [0, 0, 0];
+  for (let i = 0; i < n; i++) for (let k = 0; k < 3; k++) { me[k] += E[i][k] / n; mg[k] += G[i][k] / n; }
+  const S = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  for (let i = 0; i < n; i++) for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) S[a][b] += (E[i][a] - me[a]) * (G[i][b] - mg[b]);
+  const [[xx, xy, xz], [yx, yy, yz], [zx, zy, zz]] = S;
+  const N = [[xx + yy + zz, yz - zy, zx - xz, xy - yx], [yz - zy, xx - yy - zz, xy + yx, zx + xz],
+             [zx - xz, xy + yx, -xx + yy - zz, yz + zy], [xy - yx, zx + xz, yz + zy, -xx - yy + zz]];
+  let shift = 0; for (const r of N) shift = Math.max(shift, r.reduce((s, x) => s + Math.abs(x), 0));
+  let q = [1, 0.01, 0.02, 0.03];
+  for (let it = 0; it < 500; it++) {
+    const y = N.map((r, i) => r[0] * q[0] + r[1] * q[1] + r[2] * q[2] + r[3] * q[3] + shift * q[i]);
+    const nr = Math.hypot(...y); q = y.map(v => v / nr);
+  }
+  const [w, x, y, z] = q;
+  const R = [[1 - 2 * (y * y + z * z), 2 * (x * y - w * z), 2 * (x * z + w * y)],
+             [2 * (x * y + w * z), 1 - 2 * (x * x + z * z), 2 * (y * z - w * x)],
+             [2 * (x * z - w * y), 2 * (y * z + w * x), 1 - 2 * (x * x + y * y)]];
+  const t = [0, 1, 2].map(a => mg[a] - (R[a][0] * me[0] + R[a][1] * me[1] + R[a][2] * me[2]));
+  return { R, t };
+}
+const apply = (A, p) => [0, 1, 2].map(a => A.R[a][0] * p[0] + A.R[a][1] * p[1] + A.R[a][2] * p[2] + A.t[a]);
+
+/* Prepares a flight: aligned estimate, per-point error, metrics. */
+function prepare(f) {
+  const est = f.est, gt = f.gt;
+  const t0 = est[0][0], tEnd = est[est.length - 1][0];
+  f.t0 = t0; f.tEnd = tEnd;
+  if (f.blind_from == null) f.blind_from = tEnd - 5;
+  f.P = est.map(r => r.slice(1)); f.err = null; f.G = null; f.calc = {};
+  if (gt && gt.length > 10) {
+    const tg = gt.map(r => r[0]), E = [], Gm = [], idx = [];
+    est.forEach((r, i) => { const j = nearest(tg, r[0]); if (Math.abs(tg[j] - r[0]) <= 0.02) { E.push(r.slice(1)); Gm.push(gt[j].slice(1)); idx.push(i); } });
+    if (E.length > 10) {
+      const A = align(E, Gm);
+      f.P = est.map(r => apply(A, r.slice(1)));
+      f.G = gt.map(r => r.slice(1));
+      f.err = new Array(est.length).fill(null);
+      let s = 0, sb = 0, nb = 0, sc = 0; const mg = [0, 0, 0];
+      Gm.forEach(g => { for (let k = 0; k < 3; k++) mg[k] += g[k] / Gm.length; });
+      idx.forEach((i, k) => {
+        const a = f.P[i], g = Gm[k], d2 = (a[0] - g[0]) ** 2 + (a[1] - g[1]) ** 2 + (a[2] - g[2]) ** 2;
+        f.err[i] = Math.sqrt(d2); s += d2; sc += (g[0] - mg[0]) ** 2 + (g[1] - mg[1]) ** 2 + (g[2] - mg[2]) ** 2;
+        if (est[i][0] >= f.blind_from) { sb += d2; nb++; }
+      });
+      f.calc = { ate: Math.sqrt(s / idx.length), constant: Math.sqrt(sc / idx.length), blind: nb ? Math.sqrt(sb / nb) : null, pairs: idx.length };
+    }
+  }
+  if (!f.gaps) {                                   // own file: dropouts from the full-resolution timestamps
+    const dts = []; for (let i = 1; i < est.length; i++) dts.push(est[i][0] - est[i - 1][0]);
+    const med = dts.slice().sort((a, b) => a - b)[dts.length >> 1] || 0.005;
+    f.gaps = []; for (let i = 1; i < est.length; i++) if (est[i][0] - est[i - 1][0] > 2.5 * med) f.gaps.push([est[i - 1][0], est[i][0]]);
+  }
+  f.T = est.map(r => r[0]);
+  f.gapIdx = f.gaps.map(g => nearest(f.T, g[1]));
+  return f;
+}
+
+/* ---------- drawing ---------- */
+function setup(c) {
+  const dpr = Math.min(2, window.devicePixelRatio || 1), r = c.getBoundingClientRect();
+  c.width = Math.round(r.width * dpr); c.height = Math.round(r.height * dpr);
+  const g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); return [g, r.width, r.height];
+}
+function view(c, ax) {
+  const [g, W, H] = setup(c);
+  g.clearRect(0, 0, W, H);
+  if (!F) { g.fillStyle = CSS("--mute"); g.font = "14px " + CSS("--body"); g.fillText("Load a trajectory to begin", 18, 30); return; }
+  const pts = F.P.concat(F.G || []);
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (const p of pts) { x0 = Math.min(x0, p[ax[0]]); x1 = Math.max(x1, p[ax[0]]); y0 = Math.min(y0, p[ax[1]]); y1 = Math.max(y1, p[ax[1]]); }
+  const pad = 22, sc = Math.min((W - 2 * pad) / Math.max(x1 - x0, 0.3), (H - 2 * pad) / Math.max(y1 - y0, 0.3));
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  const X = p => W / 2 + (p[ax[0]] - cx) * sc, Y = p => H / 2 - (p[ax[1]] - cy) * sc;
+  // 1 m grid
+  g.strokeStyle = CSS("--line"); g.lineWidth = 1; g.beginPath();
+  for (let v = Math.ceil(x0 - 50); v <= x1 + 50; v++) { const px = W / 2 + (v - cx) * sc; if (px > 0 && px < W) { g.moveTo(px, 0); g.lineTo(px, H); } }
+  for (let v = Math.ceil(y0 - 50); v <= y1 + 50; v++) { const py = H / 2 - (v - cy) * sc; if (py > 0 && py < H) { g.moveTo(0, py); g.lineTo(W, py); } }
+  g.stroke();
+  g.fillStyle = CSS("--mute"); g.font = "11px " + CSS("--mono"); g.fillText("grid 1 m", 10, H - 10);
+  const tCut = F.t0 + frac * (F.tEnd - F.t0);
+  if (F.G) { g.strokeStyle = CSS("--truth"); g.globalAlpha = 0.75; g.lineWidth = 1.6; g.beginPath(); F.G.forEach((p, i) => i ? g.lineTo(X(p), Y(p)) : g.moveTo(X(p), Y(p))); g.stroke(); g.globalAlpha = 1; }
+  let k = 0; g.lineWidth = 2.2; g.lineJoin = "round";
+  for (const [col, cond] of [["--ours", i => F.T[i] < F.blind_from], ["--blind", i => F.T[i] >= F.blind_from - 0.05]]) {
+    g.strokeStyle = CSS(col); g.lineWidth = col === "--blind" ? 3.4 : 2.2; g.beginPath(); let on = false;
+    for (let i = 0; i < F.P.length && F.T[i] <= tCut; i++) {
+      if (!cond(i)) { on = false; continue; }
+      const p = F.P[i]; if (!on) { g.moveTo(X(p), Y(p)); on = true; } else g.lineTo(X(p), Y(p)); k = i;
+    }
+    g.stroke();
+  }
+  g.fillStyle = CSS("--ink");
+  F.gapIdx.forEach(i => { if (F.T[i] <= tCut) { const p = F.P[i]; g.beginPath(); g.arc(X(p), Y(p), 2.3, 0, 7); g.fill(); } });
+  const mi = hoverT != null ? nearest(F.T, hoverT) : nearest(F.T, tCut);
+  const m = F.P[mi];
+  g.fillStyle = F.T[mi] >= F.blind_from ? CSS("--blind") : CSS("--ours-hi");
+  g.strokeStyle = CSS("--bg"); g.lineWidth = 3; g.beginPath(); g.arc(X(m), Y(m), 6, 0, 7); g.stroke(); g.fill();
+}
+function timeline() {
+  const c = $("err"), [g, W, H] = setup(c);
+  g.clearRect(0, 0, W, H);
+  if (!F || !F.err) { g.fillStyle = CSS("--mute"); g.font = "14px " + CSS("--body"); g.fillText(F ? "Load ground truth to see the error over time" : "", 16, 28); return; }
+  const L = 44, R = 12, T = 12, B = 26, w = W - L - R, h = H - T - B;
+  const vals = F.err.filter(v => v != null), vmax = Math.max(1, Math.ceil(Math.max(...vals)));
+  const X = t => L + (t - F.t0) / (F.tEnd - F.t0) * w, Y = v => T + h - v / vmax * h;
+  g.fillStyle = "rgba(208,126,8,0.14)"; g.fillRect(X(F.blind_from), T, X(F.tEnd) - X(F.blind_from), h);
+  g.strokeStyle = CSS("--line"); g.lineWidth = 1; g.fillStyle = CSS("--mute"); g.font = "11px " + CSS("--mono");
+  const step = vmax > 6 ? 2 : 1;
+  for (let v = 0; v <= vmax; v += step) { g.beginPath(); g.moveTo(L, Y(v)); g.lineTo(W - R, Y(v)); g.stroke(); g.fillText(v + " m", 6, Y(v) + 4); }
+  const dur = F.tEnd - F.t0, tick = dur > 120 ? 30 : dur > 50 ? 20 : 10;
+  for (let t = 0; t <= dur; t += tick) g.fillText(t + " s", X(F.t0 + t) - 8, H - 8);
+  if (F.calc.constant) { g.setLineDash([5, 5]); g.strokeStyle = CSS("--truth"); g.beginPath(); g.moveTo(L, Y(F.calc.constant)); g.lineTo(W - R, Y(F.calc.constant)); g.stroke(); g.setLineDash([]);
+    g.fillStyle = CSS("--truth"); g.fillText("constant-position baseline", L + 6, Y(F.calc.constant) - 5); }
+  g.fillStyle = CSS("--ink"); F.gaps.forEach(gp => g.fillRect(X(gp[0]), T + h - 6, Math.max(1.5, X(gp[1]) - X(gp[0])), 6));
+  // area + line
+  const pts = []; F.err.forEach((v, i) => { if (v != null) pts.push([X(F.T[i]), Y(v)]); });
+  g.beginPath(); g.moveTo(pts[0][0], T + h); pts.forEach(p => g.lineTo(p[0], p[1])); g.lineTo(pts[pts.length - 1][0], T + h); g.closePath();
+  g.fillStyle = "rgba(14,156,194,0.16)"; g.fill();
+  g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.strokeStyle = CSS("--ours"); g.lineWidth = 2; g.stroke();
+  g.fillStyle = "#f0a640"; g.fillText("blind 5 s", Math.min(X(F.blind_from) + 4, W - R - 60), T + 12);
+  const tc = hoverT != null ? hoverT : F.t0 + frac * dur, xi = X(tc);
+  g.strokeStyle = CSS("--ink"); g.globalAlpha = 0.6; g.beginPath(); g.moveTo(xi, T); g.lineTo(xi, T + h); g.stroke(); g.globalAlpha = 1;
+  const ei = nearest(F.T, tc), ev = F.err[ei];
+  if (ev != null) {
+    const label = (F.T[ei] - F.t0).toFixed(1) + " s  " + ev.toFixed(2) + " m";
+    g.font = "12px " + CSS("--mono"); const tw = g.measureText(label).width + 12, bx = Math.min(Math.max(xi + 8, L), W - R - tw);
+    g.fillStyle = "#0d1b3e"; g.fillRect(bx, T + 2, tw, 20); g.fillStyle = CSS("--ink"); g.fillText(label, bx + 6, T + 16);
+  }
+}
+function drawAll() {
+  view($("top"), [0, 1]); view($("side"), [0, 2]); timeline();
+  if (!F) return;
+  const tc = hoverT != null ? hoverT : F.t0 + frac * (F.tEnd - F.t0);
+  $("clock").textContent = (tc - F.t0).toFixed(1) + " / " + (F.tEnd - F.t0).toFixed(0) + " s";
+  const blind = tc >= F.blind_from;
+  $("phase").textContent = blind ? "blind: no sensor" : "sensor working"; $("phase").className = "phase " + (blind ? "blind" : "sensed");
+}
+
+/* ---------- metrics panel ---------- */
+function row(k, v, cls) { return "<tr><td>" + k + "</td><td" + (cls ? ' class="' + cls + '"' : "") + ">" + v + "</td></tr>"; }
+function metrics() {
+  const m = F.metrics || {}, c = F.calc, b = $("mbody");
+  $("mtitle").textContent = F.label || "Your file";
+  $("msub").textContent = F.rows ? F.rows.toLocaleString() + " IMU rows, " + F.duration.toFixed(0) + " s" : F.est.length.toLocaleString() + " poses";
+  let h = "";
+  if (c.ate != null) {
+    const gain = 100 * (1 - c.ate / c.constant);
+    h += row("Position error (ATE)", c.ate.toFixed(2) + " m", gain > 0 ? "win" : "");
+    h += row("Constant-position baseline", c.constant.toFixed(2) + " m");
+    h += row("Better than standing still", (gain > 0 ? gain.toFixed(0) + "%" : "no"), gain > 0 ? "win" : "");
+    if (c.blind != null) h += row("Error in the blind final 5 s", c.blind.toFixed(2) + " m");
+  }
+  h += row("Dropouts in the input", F.gaps.length.toString());
+  if (m.rejected != null) h += row("Broken samples rejected", m.rejected.toLocaleString());
+  if (m.mu != null) h += row("Rotor-drag model", m.drag_used ? '<span class="pill">on</span> &mu; ' + m.mu.toFixed(2) + " 1/s" : '<span class="pill off">off</span>');
+  if (m.seed) h += row("Organiser noise removed", m.seed === "applied" ? '<span class="pill">verified</span>' : '<span class="pill off">not matched</span>');
+  b.innerHTML = h;
+}
+
+/* ---------- selection ---------- */
+function select(f, tab) {
+  F = f ? prepare(f) : null; frac = 1; hoverT = null; stop();
+  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t === tab ? "true" : "false"));
+  $("own-card").hidden = tab !== $("tab-own");
+  if (F) metrics(); else $("mbody").innerHTML = "";
+  $("scrub").value = 1000; drawAll();
+}
+let ownEst = null, ownGt = null;
+async function loadOwn(input, which) {
+  const file = input.files[0]; if (!file) return;
+  const rows = parseTraj(await file.text());
+  if (rows.length < 2) { $("msg").textContent = "No poses found in " + file.name + ". Expected lines of: timestamp x y z ..."; return; }
+  if (which === "est") ownEst = rows; else ownGt = rows;
+  if (ownEst) {
+    select({ label: "Your file", est: ownEst, gt: ownGt, metrics: {} }, $("tab-own"));
+    $("msg").textContent = F.calc.pairs ? F.calc.pairs.toLocaleString() + " poses matched to the truth within 20 ms." : (ownGt ? "The two files do not overlap in time." : "Add ground truth to see the error.");
+  }
+}
+
+/* ---------- playback ---------- */
+function stop() { playing = false; $("play").textContent = "Play"; }
+function tick(ts) {
+  if (!playing) return;
+  const dt = last ? (ts - last) / 1000 : 0; last = ts;
+  frac = Math.min(1, frac + dt / 14);                  // whole flight in about 14 s
+  $("scrub").value = Math.round(frac * 1000); drawAll();
+  if (frac >= 1) { stop(); return; }
+  requestAnimationFrame(tick);
+}
+$("play").addEventListener("click", () => {
+  if (playing) { stop(); return; }
+  if (frac >= 1) frac = 0;
+  playing = true; last = 0; hoverT = null; $("play").textContent = "Pause"; requestAnimationFrame(tick);
+});
+$("scrub").addEventListener("input", e => { stop(); frac = e.target.value / 1000; hoverT = null; drawAll(); });
+$("err").addEventListener("pointermove", e => {
+  if (!F || !F.err) return; const r = e.target.getBoundingClientRect(), L = 44, w = r.width - 56;
+  hoverT = F.t0 + Math.min(1, Math.max(0, (e.clientX - r.left - L) / w)) * (F.tEnd - F.t0); drawAll();
+});
+$("err").addEventListener("pointerleave", () => { hoverT = null; drawAll(); });
+$("tab-own").addEventListener("click", () => { if (ownEst) select({ label: "Your file", est: ownEst, gt: ownGt, metrics: {} }, $("tab-own")); else select(null, $("tab-own")); });
+$("fEst").addEventListener("change", e => loadOwn(e.target, "est"));
+$("fGt").addEventListener("change", e => loadOwn(e.target, "gt"));
+window.addEventListener("resize", drawAll);
+
+function start(json) {
+  DATA = json;
+  const box = $("tabs");
+  json.flights.forEach((f, i) => {
+    const b = document.createElement("button"); b.className = "tab"; b.type = "button"; b.setAttribute("role", "tab");
+    b.id = "tab-" + f.id; b.innerHTML = f.label + " <small>" + f.difficulty + "</small>";
+    b.addEventListener("click", () => select(f, b)); box.appendChild(b);
+  });
+  select(json.flights[0], $("tab-" + json.flights[0].id));
+}
+fetch("flights.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(start)
+  .catch(() => { select(null, $("tab-own")); $("msg").textContent = "Bundled demo flights could not be loaded. Load your own files above."; });
+</script>
+</body>
+</html>
