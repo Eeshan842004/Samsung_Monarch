@@ -1,5 +1,9 @@
 # Path Finder: IMU-only trajectory estimation under sensor degradation
 
+[![tests](https://github.com/Eeshan842004/Samsung_Monarch/actions/workflows/tests.yml/badge.svg)](https://github.com/Eeshan842004/Samsung_Monarch/actions/workflows/tests.yml)
+
+**[Live viewer](https://eeshan842004.github.io/Samsung_Monarch/)** | **[Demo video](https://github.com/Eeshan842004/Samsung_Monarch/releases/download/v1.0/VITVellore_Monarch_demo.mp4)** | **[Presentation (PDF)](docs/deck/VITVellore_Monarch.pdf)** | **[Release v1.0](https://github.com/Eeshan842004/Samsung_Monarch/releases/tag/v1.0)**
+
 Samsung XR Hackathon 2026, Track 03. Team **MONARCH**, VIT Vellore (`VITVellore_Monarch`): Eshan, Harshita Kumar.
 
 A degraded IMU log goes in; a 6-DoF trajectory with one pose per sample comes out, including five seconds of dead reckoning after the sensor dies. Python and NumPy only.
@@ -76,7 +80,7 @@ pathfinder.write_trajectory("estimated_trajectory.txt", ts, info, sol, pathfinde
 
 ## Demo video and presentation
 
-- Video: `docs/video/VITVellore_Monarch_demo.mp4` (2 min 15 s). Link: `TODO(team) video URL`.
+- Video: `docs/video/VITVellore_Monarch_demo.mp4` (2 min 15 s). Link: <https://github.com/Eeshan842004/Samsung_Monarch/releases/download/v1.0/VITVellore_Monarch_demo.mp4> (attached to the v1.0 release).
 - Presentation: `docs/deck/VITVellore_Monarch.pptx` (PDF alongside).
 - AI disclosure: [AI_DISCLOSURE.md](AI_DISCLOSURE.md).
 
