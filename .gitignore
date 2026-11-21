@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 data/
+eval/
 _edge/
 out/
 *.zip
