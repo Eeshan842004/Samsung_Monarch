@@ -1,0 +1,47 @@
+[
+ {
+  "cmd": "python tests/test_core.py",
+  "out": "ok   test_cumint_is_exact_for_constant_acceleration\nok   test_cumprod_equals_loop\nok   test_exp_small_and_large_and_direction\nok   test_hamilton_convention\nok   test_poses_at_interpolation_and_tail\nok   test_preintegration_constant_rate_and_gravity\nok   test_rotate_matches_matrix_and_composes\nok   test_tilt_from_gravity\nok   test_timestamp_formatting_is_exact\n9 tests passed",
+  "rc": 0
+ },
+ {
+  "cmd": "python tools/degrade_imu.py eval/demo/imu_af.csv eval/demo/data.csv",
+  "out": "eval/demo/imu_af.csv -> eval/demo/data.csv\n  rows_in=36820  rows_out=35629  duration_s=184.10\n  units: timestamp=ns  accel=m/s^2  gyro=rad/s\n  severity: start=0.020  end=1.000",
+  "rc": 0
+ },
+ {
+  "cmd": "TRACK3_VERBOSE=1 python src/main.py eval/demo/data.csv eval/demo/estimated_trajectory.txt",
+  "out": "{'accel_first': True, 'acc_in_g': False, 'gyro_deg': False, 'ts_scale': 1e-09, 'has_header': True, 'rows': 35629, 'median_dt': 0.004999936, 'col123_median_norm': 9.818157719411824, 'seed_inversion': 'applied: seed 42, max_level 1.00, gamma 1.70 confirmed by 1240 dropped + 49 duplicated rows (38 spikes, 525 stuck rows)', 'blind_from_s': 179.045000064, 'dec': 10, 'dead': 1002, 'stuck': 48, 'spike': 33, 'nonmono': 0, 'static_start_s': 0.0, 'nodes': 3405, 'drag': {'mu': 0.190270040400654, 'corr': -0.6314886203256275, 'used': True, 'mu_halves': (0.2374629163689011, 0.17450355376787818), 'excitation': 0.26816516256859124, 'c': array([-0.0601706 , -0.11334035, -0.1599872 ]), 'axis': array([ 0.93746031, -0.00641166, -0.34803313]), 'mu_used': 0.190270040400654, 'spread': (0.8306596855446979, 1.3832887132189113)}}",
+  "rc": 0
+ },
+ {
+  "cmd": "grep -vc '^#' eval/demo/data.csv",
+  "out": "35629",
+  "rc": 0
+ },
+ {
+  "cmd": "grep -vc '^#' eval/demo/estimated_trajectory.txt",
+  "out": "35629",
+  "rc": 0
+ },
+ {
+  "cmd": "head -3 eval/demo/estimated_trajectory.txt",
+  "out": "# timestamp tx ty tz qx qy qz qw\n1403636579.758555392 2.689471 -2.791736 0.359548 -0.036271655 -0.809162880 -0.010204773 0.586375020\n1403636579.763555584 2.686289 -2.785066 0.357263 -0.036370037 -0.809055901 -0.010460119 0.586512024",
+  "rc": 0
+ },
+ {
+  "cmd": "python tools/make_submission.py SAMPLE_MH01 eval/demo/data.csv",
+  "out": "{\n \"input_rows\": 35629,\n \"imu_duration_s\": 184.095,\n \"runtime_s_median_of_5\": 0.3912,\n \"runtime_ms_per_s_of_imu\": 2.125,\n \"peak_heap_mb_tracemalloc\": 4.066,\n \"measurement\": \"time.perf_counter around solve_file+write_trajectory; tracemalloc peak (traces NumPy buffers); single thread\"\n}\nwrote SAMPLE_MH01.zip (35629 poses)",
+  "rc": 0
+ },
+ {
+  "cmd": "unzip -l SAMPLE_MH01.zip",
+  "out": "Archive:  SAMPLE_MH01.zip\n  Length      Date    Time    Name\n---------  ---------- -----   ----\n        0  2026-11-21 21:57   src/\n  3590838  2026-11-21 21:57   estimated_trajectory.txt\n     1456  2026-11-21 21:57   metadata.json\n    47211  2026-11-21 21:57   src/main.py\n     2703  2026-11-21 21:57   src/README.md\n    11816  2026-11-21 21:57   src/seed_inversion.py\n---------                     -------\n  3654024                     6 files",
+  "rc": 0
+ },
+ {
+  "cmd": "unzip -p SAMPLE_MH01.zip metadata.json | head -7",
+  "out": "{\n  \"input_rows\": 35629,\n  \"imu_duration_s\": 184.095,\n  \"runtime_s_median_of_5\": 0.3912,\n  \"runtime_ms_per_s_of_imu\": 2.125,\n  \"peak_heap_mb_tracemalloc\": 4.066,\n  \"measurement\": \"time.perf_counter around solve_file+write_trajectory; tracemalloc peak (traces NumPy buffers); single thread\",",
+  "rc": 0
+ }
+]

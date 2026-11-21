@@ -10,3 +10,5 @@ metadata.json
 final_table.json
 tools/_perf_est.txt
 .DS_Store
+docs/video/cap/
+docs/video/preview_*

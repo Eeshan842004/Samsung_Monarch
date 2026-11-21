@@ -9,7 +9,7 @@ Deadline: **22 Nov 2026, 11:59 PM IST**, one Google Form submission per team. Sl
 | Submission package (as per theme) | `VITVellore_Monarch.zip`: slide 17 says the submitted `estimated_trajectory.txt` is what gets compared with the hidden ground truth | `python tools/make_submission.py VITVellore_Monarch <organiser csv>` |
 | Source code | Public GitHub repository URL | this repository |
 | Presentation | `docs/deck/VITVellore_Monarch.pptx` (PDF alongside) | built on the organiser template |
-| Video | `docs/video/VITVellore_Monarch_demo.mp4` (2 min 15 s, captioned, silent) uploaded to YouTube or Drive | add a voice-over if you have time |
+| Video | `docs/video/VITVellore_Monarch_demo.mp4` (2 min 21 s, captioned, silent; a recording of the project running) uploaded to YouTube or Drive | add a voice-over if you have time |
 | AI Disclosure | Text from `AI_DISCLOSURE.md` | written |
 | README | In the repository root and inside the zip (`src/README.md`) | already written; repository and viewer links filled |
 | APK/SDK (if any) | "No APK. Python API documented in the README (`solve_file`, `poses_at`, `write_trajectory`)." | README, "Python API" |

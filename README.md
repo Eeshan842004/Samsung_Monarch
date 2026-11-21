@@ -80,7 +80,7 @@ pathfinder.write_trajectory("estimated_trajectory.txt", ts, info, sol, pathfinde
 
 ## Demo video and presentation
 
-- Video: `docs/video/VITVellore_Monarch_demo.mp4` (2 min 15 s). Link: <https://github.com/Eeshan842004/Samsung_Monarch/releases/download/v1.0/VITVellore_Monarch_demo.mp4> (attached to the v1.0 release).
+- Video: `docs/video/VITVellore_Monarch_demo.mp4` (2 min 21 s, captioned, silent): the project running for real, in a terminal, in the live viewer and on GitHub ([how it was made](docs/video/README.md)). Link: <https://github.com/Eeshan842004/Samsung_Monarch/releases/download/v1.0/VITVellore_Monarch_demo.mp4> (attached to the v1.0 release).
 - Presentation: `docs/deck/VITVellore_Monarch.pptx` (PDF alongside).
 - AI disclosure: [AI_DISCLOSURE.md](AI_DISCLOSURE.md).
 
