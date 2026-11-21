@@ -1,6 +1,6 @@
 # SLIDES.md: content for the presentation and the 3-minute video
 
-**The deck is already built**: `docs/deck/VITVellore_Monarch.pptx` (organiser template, 10 slides, native charts, speaker notes). Rebuild it with `python docs/deck/build_deck.py` after changing a number; figures come from `docs/deck/make_figures.py`. Before submitting: replace Team Name, College Name, Members Details on slide 1 and the two TODO(team) links on slide 7, then rename the file.
+**The deck is already built**: `docs/deck/VITVellore_Monarch.pptx` (organiser template, 10 slides, native charts, speaker notes). Rebuild it with `python docs/deck/build_deck.py` after changing a number; figures come from `docs/deck/make_figures.py`. Team details on slide 1 and the repository and viewer links on slide 7 are filled in.
 
 Use the organisers' template and keep its order: title, THE PROBLEM, SOLUTION, ARCHITECTURE, Track Final Output, DIFFERENTIATION, DEMO & LOCAL SETUP, Brownie Slides, Thank You. Save it as `CollegeName_TeamName`. Every number below is from `docs/SPEC.md`; do not round further or add numbers that are not there.
 

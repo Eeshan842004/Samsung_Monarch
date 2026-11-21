@@ -1,6 +1,6 @@
 # Track 03 Path Finder: submission README
 
-Team MONARCH, VIT Vellore (`VITVellore_Monarch`): Eshan, Harshita Kumar. Repository: `TODO(team) GitHub URL`.
+Team MONARCH, VIT Vellore (`VITVellore_Monarch`): Eshan, Harshita Kumar. Repository: <https://github.com/Eeshan842004/Samsung_Monarch>.
 
 ## Run
 

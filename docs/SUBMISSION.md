@@ -11,7 +11,7 @@ Deadline: **22 Nov 2026, 11:59 PM IST**, one Google Form submission per team. Sl
 | Presentation | `docs/deck/VITVellore_Monarch.pptx` (PDF alongside) | built on the organiser template |
 | Video | `docs/video/VITVellore_Monarch_demo.mp4` (2 min 15 s, captioned, silent) uploaded to YouTube or Drive | add a voice-over if you have time |
 | AI Disclosure | Text from `AI_DISCLOSURE.md` | written |
-| README | In the repository root and inside the zip (`src/README.md`) | already written; fill the `TODO(team)` lines |
+| README | In the repository root and inside the zip (`src/README.md`) | already written; repository and viewer links filled |
 | APK/SDK (if any) | "No APK. Python API documented in the README (`solve_file`, `poses_at`, `write_trajectory`)." | README, "Python API" |
 | Other | Live viewer URL | `web/` deployed as a static site (Vercel or GitHub Pages) |
 
@@ -45,7 +45,7 @@ VITVellore_Monarch.zip
 - [ ] The zip was built from the organisers' evaluation file, by the code in the zip
 - [ ] `grep -vc '^#' estimated_trajectory.txt` equals the number of data rows in the input
 - [ ] `evo_ape tum <any TUM file with overlapping times> estimated_trajectory.txt -a` runs without error
-- [ ] Repository is public, has no dataset files, and `grep -rn "TODO(team)"` returns nothing
+- [ ] Repository is public, has no dataset files, and `grep -rn "TODO("` returns nothing
 - [ ] Presentation file is named `VITVellore_Monarch` and follows the template order
 - [ ] Video is 3 minutes or less and the link opens without signing in
 - [ ] Viewer URL loads on a phone and a laptop

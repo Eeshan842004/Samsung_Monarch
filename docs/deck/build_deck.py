@@ -247,8 +247,8 @@ text(s, 0.68, 1.85, 4.1, 2.1, [
     [("      VITVellore_Monarch data.csv", {})],
 ], size=12, font=MONO, color=INK, name="Commands", space_after=3)
 bullets(s, 0.5, 4.2, 4.4, 1.1, [
-    "GitHub: TODO(team) repository URL",
-    "Live viewer: TODO(team) URL (web/ folder)",
+    "GitHub: github.com/Eeshan842004/Samsung_Monarch",
+    "Live viewer: eeshan842004.github.io/Samsung_Monarch",
 ], size=12, name="Links", gap=4)
 s.shapes.add_picture("fig/viewer_crop.png", Inches(5.1), Inches(1.7), width=Inches(4.4)).name = "Viewer screenshot"
 caption(s, 5.1, 3.85, 4.4, "Static viewer (one HTML file): top and side views, dropouts and blind window marked, ATE preview")

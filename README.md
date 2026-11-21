@@ -72,7 +72,7 @@ pathfinder.write_trajectory("estimated_trajectory.txt", ts, info, sol, pathfinde
 
 ## Trajectory viewer
 
-`web/index.html` with `web/flights.json` is a static page: three bundled demo flights play back against motion-capture truth (top and side views, dropouts and the blind window marked, error over time with the constant-position baseline), or load your own estimate and ground truth. Live: `TODO(team) viewer URL` (deploy `web/` on Vercel or GitHub Pages; no build step).
+`web/index.html` with `web/flights.json` is a static page: three bundled demo flights play back against motion-capture truth (top and side views, dropouts and the blind window marked, error over time with the constant-position baseline), or load your own estimate and ground truth. Live: <https://eeshan842004.github.io/Samsung_Monarch/> (GitHub Pages, deployed from `web/` by `.github/workflows/pages.yml`; no build step).
 
 ## Demo video and presentation
 
