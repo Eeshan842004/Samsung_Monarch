@@ -24,6 +24,7 @@ MONO = lambda s: F("CascadiaMono.ttf", s)
 
 meta = json.load(open("cap/meta.json"))
 session = json.load(open("session.json"))[:8]          # last command (metadata head) is redundant
+_m = session[6]["out"]; _m = json.loads(_m[_m.index("{"):_m.rindex("}") + 1])
 
 def ease(x): x = min(1, max(0, x)); return x * x * (3 - 2 * x)
 def lerp(a, b, t): return a + (b - a) * t
@@ -236,7 +237,7 @@ PANEL_ITEMS = [  # (step index that reveals it, offset, colour, title, detail)
     (2, 6.6, VI, "Organiser noise verified", "seed check passed, noise removed (disclosed)"),
     (2, 8.6, RD, "Blind final 5 s", "from t = 179.0 s: last 5 s never trusted"),
     (4, 0.2, GR, "One pose per row", "35,629 in = 35,629 out"),
-    (6, 0.2, CY, "Budget check (this laptop)", "2.1 ms per s of IMU \u00b7 4.07 MB heap"),
+    (6, 0.2, CY, "Budget check (this laptop)", "%.1f ms per s of IMU, %.2f MB heap, one thread" % (_m["runtime_ms_per_s_of_imu"], _m["peak_heap_mb_tracemalloc"])),
 ]
 
 def scene_term(t):
@@ -248,7 +249,7 @@ def scene_term(t):
     d.rectangle((x0, y0 + 30, x1, y0 + 48), fill=(22, 29, 46, 255))
     for i, c in enumerate([(248, 113, 113), (251, 191, 36), (52, 211, 153)]):
         d.ellipse((x0 + 22 + 30 * i, y0 + 16, x0 + 38 + 30 * i, y0 + 32), fill=c + (255,))
-    s = "pathfinder-track3  \u2014  bash  \u00b7  real output, recorded 21 Nov 2026"
+    s = "pathfinder-track3  \u2014  bash  \u00b7  real output, recorded 22 Nov 2026"
     d.text(((x0 + x1 - text_w(d, s, SANS(20))) / 2, y0 + 11), s, font=SANS(20), fill=MUTE + (255,))
     # assemble visible lines: list of (segments) where segment=(text,colour)
     lines = []; cur = None; diag_line0 = None
@@ -403,8 +404,8 @@ def scene_github(t):
         ty = bd["y"] - 150
         cam = cam_lerp(cam16(200, 60, 1480), cam16(200, ty, 1480), (t - 6) / 1.6)
         im = Cam(img).render(cam)
-        callout(im, to_out((bd["x"], bd["y"], bd["width"], bd["height"]), cam), "Tests: passing", (440, 176), GR, window(t, 7.2, 11.0))
-        callout(im, to_out((tab["x"], tab["y"], tab["width"], tab["height"]), cam), "Measured results, on the front page", (1130, 560), CY, window(t, 8.0, 11.0))
+        callout(im, to_out((bd["x"], bd["y"], 224, bd["height"]), cam), "Tests and Docker: passing", (640, 176), GR, window(t, 7.2, 11.0))
+        callout(im, to_out((tab["x"], tab["y"], tab["width"], tab["height"]), cam), "Measured results, on the front page", (1330, 420), CY, window(t, 8.0, 11.0))
         caption_bar(im, "The README leads with measured results, how to run it, how it works and its limits.", "GitHub")
     else:
         im = Cam(load("cap/gh_actions.jpg")).render(cam16(0, 0, 1920))
@@ -416,7 +417,7 @@ def scene_end(t):
     im = bg_canvas(); d = ImageDraw.Draw(im)
     d.text((160, 110), "Path Finder", font=BOLD(80), fill=rgba(INK, fade_in(t, 0.1)))
     d.text((164, 215), "Physics, not learning: the rotor's own drag becomes a speedometer.", font=SANS(36), fill=rgba(MUTE, fade_in(t, 0.3)))
-    tiles = [("2.49 m", "mean ATE, 11 EuRoC flights", "3.45 m standing still", CY),
+    tiles = [("2.49 m", "mean ATE, 11 degraded flights", "3.45 m standing still", CY),
              ("1.74 m", "mean ATE in the blind final 5 s", "sensor dead, pose held", RD),
              ("1\u20133 ms", "compute per second of IMU", "budget 20 ms", GR),
              ("4.1 MB", "peak heap", "budget 8 MB", VI)]

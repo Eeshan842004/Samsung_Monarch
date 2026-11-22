@@ -31,17 +31,17 @@
  },
  {
   "cmd": "python tools/make_submission.py SAMPLE_MH01 eval/demo/data.csv",
-  "out": "{\n \"input_rows\": 35629,\n \"imu_duration_s\": 184.095,\n \"runtime_s_median_of_5\": 0.3912,\n \"runtime_ms_per_s_of_imu\": 2.125,\n \"peak_heap_mb_tracemalloc\": 4.066,\n \"measurement\": \"time.perf_counter around solve_file+write_trajectory; tracemalloc peak (traces NumPy buffers); single thread\"\n}\nwrote SAMPLE_MH01.zip (35629 poses)",
+  "out": "{\n \"input_rows\": 35629,\n \"imu_duration_s\": 184.095,\n \"runtime_s_median_of_5\": 0.3813,\n \"runtime_ms_per_s_of_imu\": 2.071,\n \"peak_heap_mb_tracemalloc\": 4.066,\n \"measurement\": \"time.perf_counter around solve_file+write_trajectory; tracemalloc peak (traces NumPy buffers); single thread\"\n}\nwrote SAMPLE_MH01.zip (35629 poses)",
   "rc": 0
  },
  {
   "cmd": "unzip -l SAMPLE_MH01.zip",
-  "out": "Archive:  SAMPLE_MH01.zip\n  Length      Date    Time    Name\n---------  ---------- -----   ----\n        0  2026-11-21 21:57   src/\n  3590838  2026-11-21 21:57   estimated_trajectory.txt\n     1456  2026-11-21 21:57   metadata.json\n    47211  2026-11-21 21:57   src/main.py\n     2703  2026-11-21 21:57   src/README.md\n    11816  2026-11-21 21:57   src/seed_inversion.py\n---------                     -------\n  3654024                     6 files",
+  "out": "Archive:  SAMPLE_MH01.zip\n  Length      Date    Time    Name\n---------  ---------- -----   ----\n        0  2026-11-22 15:51   src/\n  3590811  2026-11-22 15:51   estimated_trajectory.txt\n     1452  2026-11-22 15:51   metadata.json\n    47675  2026-11-22 15:51   src/main.py\n     3233  2026-11-22 15:51   src/README.md\n    11816  2026-11-22 15:51   src/seed_inversion.py\n---------                     -------\n  3654987                     6 files",
   "rc": 0
  },
  {
   "cmd": "unzip -p SAMPLE_MH01.zip metadata.json | head -7",
-  "out": "{\n  \"input_rows\": 35629,\n  \"imu_duration_s\": 184.095,\n  \"runtime_s_median_of_5\": 0.3912,\n  \"runtime_ms_per_s_of_imu\": 2.125,\n  \"peak_heap_mb_tracemalloc\": 4.066,\n  \"measurement\": \"time.perf_counter around solve_file+write_trajectory; tracemalloc peak (traces NumPy buffers); single thread\",",
+  "out": "{\n  \"input_rows\": 35629,\n  \"imu_duration_s\": 184.095,\n  \"runtime_s_median_of_5\": 0.3813,\n  \"runtime_ms_per_s_of_imu\": 2.071,\n  \"peak_heap_mb_tracemalloc\": 4.066,\n  \"measurement\": \"time.perf_counter around solve_file+write_trajectory; tracemalloc peak (traces NumPy buffers); single thread\",",
   "rc": 0
  }
 ]
