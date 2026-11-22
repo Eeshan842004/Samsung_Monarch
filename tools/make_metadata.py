@@ -5,8 +5,8 @@ _ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 sys.path.insert(0, os.path.join(_ROOT, "src")); sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import json, platform, statistics, time, tracemalloc
+import main as M          # must come before numpy: it pins the BLAS thread counts to 1
 import numpy as np
-import main as M
 src = sys.argv[1]; out = sys.argv[2]; meta = sys.argv[3] if len(sys.argv) > 3 else "metadata.json"
 times = []
 for _ in range(5):
