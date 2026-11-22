@@ -156,8 +156,29 @@ def tilt_from_gravity(f):
 # ----------------------------------------------------------------------------
 # pass 0: timestamps and file layout
 # ----------------------------------------------------------------------------
+class _DataLines:
+    """Text reader that skips empty lines: they are not rows, so they get no pose."""
+    def __init__(self, fh):
+        self.fh = fh
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.fh.close()
+
+    def __iter__(self):
+        return (ln for ln in self.fh if not ln.isspace())
+
+    def readline(self):
+        return next(iter(self), "")
+
+    def seek(self, pos):
+        self.fh.seek(pos)
+
+
 def _open(path):
-    return open(path, "r", encoding="utf-8-sig")
+    return _DataLines(open(path, "r", encoding="utf-8-sig"))
 
 
 def parse_values(lines):
