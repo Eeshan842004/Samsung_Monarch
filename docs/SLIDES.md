@@ -8,7 +8,7 @@ Use the organisers' template and keep its order: title, THE PROBLEM, SOLUTION, A
 
 - Theme: Track 03, Path Finder: Trajectory Estimation Under Sensor Degradation
 - Project title: **Path Finder: physics instead of learning for IMU-only navigation**
-- Team MONARCH, VIT Vellore: Eshan, Harshita Kumar
+- Team MONARCH, VIT Vellore: Eeshan, Harshita Kumar
 
 ## Template slide 2: THE PROBLEM
 
@@ -55,7 +55,7 @@ Show the output file itself (three lines of `estimated_trajectory.txt`, row coun
 | Drift fit only | 3.11 m |
 | Drift fit + rotor drag (ours) | 2.49 m |
 
-Second panel: blind final 5 s, 2.91 m without drag, 1.74 m with it.
+Second panel: blind final 5 s, 2.91 m without drag and seed check, 1.74 m with both.
 Third panel: 1 to 3 ms per second of data against 20; 4.1 MB against 8.
 
 Footnote: published learned IMU-only methods report 3.2 to 5.0 m on this dataset.
@@ -78,7 +78,7 @@ Footnote: published learned IMU-only methods report 3.2 to 5.0 m on this dataset
 |---|---|
 | Three other random seeds | 2.53 to 2.60 m |
 | 2-second dropouts | 2.65 m (3.53 m without the gap model) |
-| Five flights never used for tuning | 2.48 to 2.59 m against 3.40 m constant |
+| Five flights never used for tuning | 2.48 to 2.59 m, 3.15 m in the worst variant, against 3.40 m constant |
 | Hand-held device (TUM-VI) | drag model turns itself off; 0.73 m against 1.08 m, better on 6 of 6 |
 | 18 malformed inputs | one valid pose per row, every time |
 | Blind window filled with noise instead of zeros | no effect: the final 5 s are never trusted |

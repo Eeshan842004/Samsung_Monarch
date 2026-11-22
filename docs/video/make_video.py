@@ -140,7 +140,7 @@ def scene_title(t):
     a3 = fade_in(t, 2.1, 0.6)
     d.line([(160, 700), (900, 700)], fill=rgba(LINE, a3), width=2)
     d.text((160, 726), "Team MONARCH  \u00b7  VIT Vellore", font=SEMI(38), fill=rgba(INK, a3))
-    d.text((160, 780), "Eshan  \u00b7  Harshita Kumar", font=SANS(34), fill=rgba(MUTE, a3))
+    d.text((160, 780), "Eeshan  \u00b7  Harshita Kumar", font=SANS(34), fill=rgba(MUTE, a3))
     # stylised trajectory doodle
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0)); o = ImageDraw.Draw(ov)
     n = int(260 * ease((t - 0.3) / 3.5))
@@ -434,7 +434,7 @@ def scene_end(t):
         y = 690 + 62 * j
         d.text((160, y), k, font=SEMI(32), fill=rgba(MUTE, a)); d.text((400, y), v, font=MONO(32), fill=rgba(CY, a))
     a = fade_in(t, 3.4, 0.5)
-    d.text((160, 860), "Team MONARCH  \u00b7  VIT Vellore  \u00b7  Eshan, Harshita Kumar", font=SEMI(34), fill=rgba(INK, a))
+    d.text((160, 860), "Team MONARCH  \u00b7  VIT Vellore  \u00b7  Eeshan, Harshita Kumar", font=SEMI(34), fill=rgba(INK, a))
     d.text((160, 912), "Samsung XR Hackathon 2026  \u00b7  Track 03 Path Finder", font=SANS(28), fill=rgba(MUTE, a))
     return im
 

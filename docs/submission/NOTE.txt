@@ -1,0 +1,51 @@
+PLEASE READ: THE TRAJECTORY IN THIS PACKAGE IS FROM A SAMPLE INPUT
+Team MONARCH, VIT Vellore (VITVellore_Monarch), Track 03 Path Finder
+
+We had not received an evaluation file when we built this package on
+22 November 2026. The Track 3 FAQ says teams can use public EuRoC or TUM-VI
+sequences with degrade_imu.py as sample data, so that is what we did.
+
+estimated_trajectory.txt and metadata.json come from public EuRoC MH_01_easy,
+degraded with the organisers' degrade_imu.py. They are not results on the
+hidden evaluation data, and should not be scored against the ground truth of
+any other sequence.
+
+
+TO RUN IT ON THE EVALUATION DATA
+
+From the folder that holds this note:
+
+    pip install "numpy>=1.26"
+    python src/main.py path/to/imu0/data.csv estimated_trajectory.txt
+
+That replaces the sample trajectory. There is one pose per input row, in input
+order.
+
+
+ABOUT THE NOISE REMOVAL
+
+The sample was made with the script's default seed (42), so the optional stage
+in src/seed_inversion.py recognised it and removed the regenerated noise (see
+"seed_inversion" in metadata.json). On a file made with another seed that stage
+does nothing. It can be switched off with "use_seed_inversion": False in CFG in
+src/main.py.
+
+
+HOW THE SAMPLE WAS MADE
+
+In a checkout of https://github.com/Eeshan842004/Samsung_Monarch :
+
+    mkdir -p eval/sample
+    curl -L -o eval/sample/MH01_raw.csv https://raw.githubusercontent.com/UZ-SLAMLab/ORB_SLAM3/master/Examples/Monocular-Inertial/EuRoC_IMU/MH01.txt
+    python tools/reorder.py eval/sample/MH01_raw.csv eval/sample/MH01_af.csv
+    python tools/degrade_imu.py eval/sample/MH01_af.csv eval/sample/data.csv
+    python src/main.py eval/sample/data.csv estimated_trajectory.txt
+
+The download is the ORB-SLAM3 project's copy of the EuRoC IMU file. The reorder
+step puts the accelerometer columns first, as degrade_imu.py documents.
+
+SHA-256 with LF line endings:
+    MH01_raw.csv  cc6466e2735fc74ca6d240b459922bf28448369fcbf12c034c6a772fdf8da902
+    data.csv      84a0a7eaa019e47519db71396e82f80590a840ddce450995b9faf9c0986f5740
+
+Dataset: Burri et al., "The EuRoC micro aerial vehicle datasets", IJRR 2016.

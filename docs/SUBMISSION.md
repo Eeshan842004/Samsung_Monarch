@@ -4,16 +4,22 @@ Deadline: **22 Nov 2026, 11:59 PM IST**, one Google Form submission per team. Sl
 
 ## The form fields
 
-| Form field | What to put | Where it comes from |
-|---|---|---|
-| Submission package (as per theme) | `VITVellore_Monarch.zip`: slide 17 says the submitted `estimated_trajectory.txt` is what gets compared with the hidden ground truth | `python tools/make_submission.py VITVellore_Monarch <organiser csv>` |
-| Source code | Public GitHub repository URL | this repository |
-| Presentation | `docs/deck/VITVellore_Monarch.pptx` (PDF alongside) | built on the organiser template |
-| Video | `docs/video/VITVellore_Monarch_demo.mp4` (2 min 21 s, captioned, silent; a recording of the project running) uploaded to YouTube or Drive | add a voice-over if you have time |
-| AI Disclosure | Text from `AI_DISCLOSURE.md` | written |
-| README | In the repository root and inside the zip (`src/README.md`) | already written; repository and viewer links filled |
-| APK/SDK (if any) | "No APK. Python API documented in the README (`solve_file`, `poses_at`, `write_trajectory`)." | README, "Python API" |
-| Other | Live viewer URL | `web/` deployed as a static site (Vercel or GitHub Pages) |
+The form (link in the organisers' emails, shared with registered teams only) has no file upload. It asks for the team, its members, a public GitHub link and a tick for each item that is on GitHub.
+
+| Form field | What to put |
+|---|---|
+| College_TeamName | `VITVellore_Monarch` |
+| College | Vellore Institute of Technology,Vellore |
+| Theme selected | Path Finder: Trajectory Estimation Under Sensor Degradation |
+| Members | Name, email and mobile number of each member, primary member first |
+| GitHub Link | https://github.com/Eeshan842004/Samsung_Monarch |
+| Checklist: Submission Package | `VITVellore_Monarch.zip` on the v1.1 release (sample input, see `docs/submission/NOTE.txt`) |
+| Checklist: Source Code | `src/`, `tests/`, `tools/`, `Dockerfile` |
+| Checklist: Presentation | `docs/deck/VITVellore_Monarch.pptx` and the PDF alongside |
+| Checklist: Video | `docs/video/VITVellore_Monarch_demo.mp4` (2 min 21 s, captioned, silent), also on the v1.1 release. Slide 24 asks for a YouTube or Drive link |
+| Checklist: AI Disclosure | `AI_DISCLOSURE.md` |
+| Checklist: README | `README.md`, and `src/README.md` inside the zip |
+| Checklist: APK/SDK (if any) | No APK. The Python API is documented in the README |
 
 ### Why no APK
 
@@ -26,7 +32,8 @@ Deadline: **22 Nov 2026, 11:59 PM IST**, one Google Form submission per team. Sl
 
 ```
 VITVellore_Monarch.zip
-├── estimated_trajectory.txt      one pose per row of the organisers' file
+├── NOTE.txt                      says that the input was a sample
+├── estimated_trajectory.txt      one pose per row of the input file
 ├── metadata.json                 runtime and memory measured on your machine
 └── src/
     ├── main.py
@@ -42,18 +49,18 @@ VITVellore_Monarch.zip
 - [ ] `python tools/edge_tests.py` ends with "ALL PASS"
 - [ ] `tools/final_table.py` on the official dataset downloads reproduces `docs/SPEC.md` section 2 within 0.05 m
 - [ ] Docker image builds and the `docker run` line in the README produces a trajectory
-- [ ] The zip was built from the organisers' evaluation file, by the code in the zip
+- [ ] The zip was built by the code in the zip, from the organisers' evaluation file or from a sample that `NOTE.txt` labels
 - [ ] `grep -vc '^#' estimated_trajectory.txt` equals the number of data rows in the input
 - [ ] `evo_ape tum <any TUM file with overlapping times> estimated_trajectory.txt -a` runs without error
-- [ ] Repository is public, has no dataset files, and `grep -rn "TODO("` returns nothing
+- [ ] Repository is public, has no dataset files, and `grep -rnE "TODO[(]team"` returns nothing
 - [ ] Presentation file is named `VITVellore_Monarch` and follows the template order
 - [ ] Video is 3 minutes or less and the link opens without signing in
 - [ ] Viewer URL loads on a phone and a laptop
 - [ ] Any reply from the organisers has been applied (see below)
 
-## Questions sent to the organisers
+## Questions drafted for the organisers (not sent)
 
-Send to prism@samsung.com (the contact on the organisers' slides) as soon as possible; do not wait for a reply before finishing.
+These were drafted on 17 Nov and not sent. The official FAQ covers some of them (how memory is measured, dropouts as missing rows, evo alignment). The rest stay open.
 
 1. Slide 15 lists gyro columns before accelerometer columns, but `degrade_imu.py` treats columns 1 to 3 as the accelerometer. Which order does the evaluation file use, and was the clean file reordered before the script was applied?
 2. The script uses a fixed seed and its output is reproducible from its input. Our code can verify from the timestamps that a file was produced that way and then remove the regenerated noise. It uses only the input file and your script. Is that acceptable? We will disable it otherwise.
@@ -63,7 +70,7 @@ Send to prism@samsung.com (the contact on the organisers' slides) as soon as pos
 6. Which evo options are used for RPE (delta, pose relation)? Is orientation scored?
 7. Which Python and NumPy versions run on the evaluator?
 
-### Email text, ready to send
+### Draft email text (not sent)
 
 Subject: Track 03 Path Finder: clarifications before submission (Team MONARCH, VIT Vellore)
 
@@ -80,7 +87,7 @@ Subject: Track 03 Path Finder: clarifications before submission (Team MONARCH, V
 > 7. Environment. Which Python and NumPy versions will be used if you re-run our code?
 >
 > Thank you,
-> Eshan and Harshita Kumar, Team MONARCH, VIT Vellore
+> Eeshan and Harshita Kumar, Team MONARCH, VIT Vellore
 
 What to change for each possible answer:
 
@@ -95,7 +102,7 @@ What to change for each possible answer:
 
 | Date | Work |
 |---|---|
-| 17 Nov | Email the organisers. Create the GitHub repository. Download the official datasets and reproduce the numbers |
+| 17 Nov | Email the organisers (drafted, not sent). Create the GitHub repository. Download the official datasets and reproduce the numbers |
 | 18 Nov | Docker build. NumPy 1.26 test. Deploy the viewer |
 | 19 Nov | Slides from `docs/SLIDES.md`. Record the video |
 | 20 Nov | Freeze `src/`. Apply organiser answers |

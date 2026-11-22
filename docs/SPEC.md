@@ -216,6 +216,7 @@ A row's pose depends only on its timestamp, so duplicated rows get identical pos
 | Missing rows up to 0.3 s | larger time step | trapezoid across the gap |
 | Gaps over 0.3 s | node duration | five extra unknowns per gap (6.4) |
 | Duplicated or out-of-order timestamps | time not strictly increasing | skipped in integration, still receive a pose |
+| Empty lines | whitespace only | skipped by the reader; not a row, so no pose |
 | Column order | the triad whose median norm is one g is the accelerometer; header used only as tie-break | any order accepted |
 | Units | accelerometer in g if median norm in (0.5, 2); gyro in deg/s if the 99th percentile exceeds 8 | converted |
 
@@ -329,8 +330,8 @@ Tested and rejected, no gain: lever arm of the IMU from the centre of mass (2.57
 | Drag model developed on one airframe | Another multirotor may differ | Calibrated per file, guarded, falls back |
 | Files shorter than about one minute | Drag model stays off (not enough data to calibrate) | By design |
 | Datasets were obtained from public repository mirrors | Possible differences from the official archives | Re-run on official downloads |
-| Docker image | Not built in the authoring environment | Build and run once before submitting |
-| Presentation | Built from the organisers' template (`docs/deck/`) | Fill team name, college, members, links |
+| Docker image | Not built in the authoring environment | Built and run on every push by `.github/workflows/docker.yml` |
+| Presentation | Built from the organisers' template (`docs/deck/`) | Team, college, members and links filled in |
 
 ## 11. Functions (all in `src/main.py` unless noted)
 

@@ -135,7 +135,7 @@ for sh in s.shapes:
         ps[1].runs[0].text = "VIT Vellore"
     if sh.name == "Text Box 22":
         ps = sh.text_frame.paragraphs
-        ps[0].runs[0].text = "Eshan"
+        ps[0].runs[0].text = "Eeshan"
         np_ = copy.deepcopy(ps[0]._p); ps[0]._p.addnext(np_)
         sh.text_frame.paragraphs[1].runs[0].text = "Harshita Kumar"
 text(s, 0.55, 3.75, 7.6, 0.9, [
@@ -269,7 +269,7 @@ rows = [("Scenario (mean ATE)", "Ours", "Constant"),
         ("Three other random seeds", "2.53 to 2.60 m", "3.45 m"),
         ("2 s dropouts (gap model off: 3.53 m)", "2.65 m", "3.45 m"),
         ("Blind window cut mid-flight (33 files)", "2.85 m", "n/a"),
-        ("5 held-out flights, settings from the other 6", "2.48 to 2.59 m", "3.40 m"),
+        ("5 held-out flights, settings from the other 6", "2.48 to 2.59 m (worst variant 3.15 m)", "3.40 m"),
         ("Hand-held TUM-VI rooms (drag off)", "0.73 m", "1.08 m"),
         ("Python 3.11 + NumPy 1.26 vs 3.13 + NumPy 2.5", "same within 0.2 mm", "")]
 tbl = s.shapes.add_table(len(rows), 3, Inches(0.5), Inches(1.7), Inches(9.0), Inches(3.3)).table

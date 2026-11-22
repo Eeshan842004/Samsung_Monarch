@@ -11,7 +11,7 @@ Read in this order: `docs/SPEC.md` (authoritative: maths, functions, measured re
 ## Layout
 
 ```
-src/main.py              the estimator (NumPy only, ~915 lines). Entry point for the evaluator.
+src/main.py              the estimator (NumPy only, ~935 lines). Entry point for the evaluator.
 src/seed_inversion.py    optional stage; main.py runs without it
 src/README.md            the README that goes inside the submission zip
 tests/test_core.py       9 unit tests for the maths
@@ -82,10 +82,10 @@ python tools/degrade_imu.py data/euroc/$S/imu.csv    data/euroc/$S/deg_raw.csv  
 | 1 | Reproduce the reference numbers on the official dataset downloads | `tools/final_table.py` matches `docs/SPEC.md` section 2 within 0.05 m |
 | 2 | Build and run the Docker image once | the `docker run` line above writes a trajectory with the right row count |
 | 3 | Re-run the NumPy 1.26 check on your machine (already passed on Python 3.11 + NumPy 1.26.4 during authoring) | unit and edge tests pass |
-| 4 | Team details are filled in (Team MONARCH, VIT Vellore, Eshan, Harshita Kumar). Repository and viewer URLs are filled in (README, `src/README.md`, slide 7 of the deck); only the video link is left | no placeholder left (`grep -rn "TODO("`) |
+| 4 | Team details are filled in (Team MONARCH, VIT Vellore, Eeshan, Harshita Kumar). Repository and viewer URLs are filled in (README, `src/README.md`, slide 7 of the deck); only a YouTube or Drive link for the video is left | no placeholder left (`grep -rnE "TODO[(]team"`) |
 | 5 | Deploy `web/` as a static site (Vercel or GitHub Pages; no build command, output directory `web`). Three demo flights are bundled in `web/flights.json` (regenerate with `python tools/export_web.py`) | the URL loads and shows the sample |
 | 6 | Run `tools/make_submission.py` on the organiser's evaluation file | zip has `estimated_trajectory.txt`, `metadata.json`, `src/main.py`, `src/seed_inversion.py`, `src/README.md`; row counts match |
-| 7 | Apply the organisers' answers (see `docs/SUBMISSION.md`, "Questions sent") | e.g. set `"use_seed_inversion": False` in `CFG` if they object |
+| 7 | Apply the organisers' answers (see `docs/SUBMISSION.md`, "Questions drafted") | e.g. set `"use_seed_inversion": False` in `CFG` if they object |
 | 8 | Confirm the GitHub Actions workflow (`.github/workflows/tests.yml`) passes after the first push | green check on the repository |
 
 Optional experiments, each behind its acceptance rule above: heading drift without a rest start; heading inside long gaps. The estimator is otherwise frozen: three council seats and the error budget in `docs/SPEC.md` section 9 agree that the remaining error is not reachable by tuning.

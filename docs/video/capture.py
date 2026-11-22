@@ -1,7 +1,6 @@
 import os, json, time
 from playwright.sync_api import sync_playwright
 URL="https://eeshan842004.github.io/Samsung_Monarch/"
-REPO="https://github.com/Eeshan842004/Samsung_Monarch"
 EST=os.path.abspath("../../eval/demo/estimated_trajectory.txt")
 DSF=1.5
 plan={"MH":("Machine Hall 03",420),"V1":("Vicon Room 1-02",210),"M5":("Machine Hall 05",210)}
@@ -39,16 +38,6 @@ with sync_playwright() as p:
         pg.screenshot(path=f"{d}/{i:04d}.jpg",full_page=True,quality=90)
     meta["own_rows"]=pg.locator("#mbody").inner_text(); meta["own_msg"]=pg.locator("#msg").inner_text()
     meta["own_boxes"]={s:box(s) for s in ["#own-card","#metrics-card","#top"]}
-    # GitHub
-    g=b.new_page(viewport={"width":1920,"height":1080},device_scale_factor=DSF,color_scheme="dark")
-    g.goto(REPO,wait_until="networkidle"); g.wait_for_timeout(2000)
-    g.screenshot(path="cap/gh_repo.jpg",full_page=True,quality=90)
-    meta["gh_h"]=g.evaluate("document.documentElement.scrollHeight")
-    rt=g.locator("article table").first
-    meta["gh_table"]=rt.bounding_box() if rt.count() else None
-    meta["gh_readme"]=g.locator("article").first.bounding_box()
-    g.goto(REPO+"/actions",wait_until="networkidle"); g.wait_for_timeout(2000)
-    g.screenshot(path="cap/gh_actions.jpg",full_page=False,quality=90)
     b.close()
 json.dump(meta,open("cap/meta.json","w"),indent=1)
 print("all done",round(time.time()-t0),"s")

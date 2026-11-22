@@ -73,7 +73,7 @@ All three seats, in different words: **physics, not learning; rotor drag as a sp
 |---|---|---|
 | Hidden data unlike EuRoC | Low to medium | TUM-VI tested; guards; fallback |
 | Evaluator environment differs | Medium | Dockerfile; NumPy-only; test on NumPy 1.26 (open task) |
-| Organisers dislike the seed inversion | Low if disclosed | Disclosed in both READMEs; one flag; question sent |
+| Organisers dislike the seed inversion | Low if disclosed | Disclosed in both READMEs; one flag; question drafted, not sent |
 | Scoring is relative and everyone clusters near the constant baseline | Medium | The drag gain and the 40% efficiency score are the separation |
 | Another team uses public ground truth | Unknown | Outside our control |
 

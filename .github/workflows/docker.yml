@@ -1,0 +1,29 @@
+name: docker
+on: [push, pull_request]
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image as the README does
+        run: docker build -t pathfinder .
+      - name: Write a synthetic IMU file that ends in an empty line
+        run: |
+          mkdir -p data/imu0
+          python3 - <<'PY'
+          import random
+          r = random.Random(0)
+          t0 = 1403636579758555392
+          with open("data/imu0/data.csv", "w") as f:
+              f.write("#timestamp [ns],w_x,w_y,w_z,a_x,a_y,a_z\n")
+              for i in range(6000):
+                  g = [r.gauss(0, 0.02) for _ in range(3)]
+                  a = [9.81 + r.gauss(0, 0.1), r.gauss(0, 0.1), r.gauss(0, 0.1)]
+                  f.write(",".join([str(t0 + i * 5000000)] + ["%.6f" % v for v in g + a]) + "\n")
+              f.write("\n")
+          PY
+      - name: Run the container as the README does
+        run: docker run --rm -v "$PWD/data:/data" pathfinder /data/imu0/data.csv /data/estimated_trajectory.txt
+      - name: One pose per input row
+        run: |
+          test "$(grep -vc '^#' data/estimated_trajectory.txt)" -eq 6000
