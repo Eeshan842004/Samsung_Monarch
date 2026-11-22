@@ -3,7 +3,7 @@
 [![tests](https://github.com/Eeshan842004/Samsung_Monarch/actions/workflows/tests.yml/badge.svg)](https://github.com/Eeshan842004/Samsung_Monarch/actions/workflows/tests.yml)
 [![docker](https://github.com/Eeshan842004/Samsung_Monarch/actions/workflows/docker.yml/badge.svg)](https://github.com/Eeshan842004/Samsung_Monarch/actions/workflows/docker.yml)
 
-**[Live viewer](https://eeshan842004.github.io/Samsung_Monarch/)** | **[Demo video](https://github.com/Eeshan842004/Samsung_Monarch/releases/download/v1.1/VITVellore_Monarch_demo.mp4)** | **[Presentation (PDF)](docs/deck/VITVellore_Monarch.pdf)** | **[Release v1.1](https://github.com/Eeshan842004/Samsung_Monarch/releases/tag/v1.1)**
+**[Live viewer](https://eeshan842004.github.io/Samsung_Monarch/)** | **[Demo video](https://drive.google.com/file/d/1P01XknByXCghU8aiNOevSH-U_mkTnmx_/view?usp=sharing)** | **[Presentation (PDF)](docs/deck/VITVellore_Monarch.pdf)** | **[Release v1.1](https://github.com/Eeshan842004/Samsung_Monarch/releases/tag/v1.1)**
 
 We are Team **MONARCH** from VIT Vellore (Eeshan and Harshita Kumar), and this is our entry for Track 03 of the Samsung XR Hackathon 2026, submitted as `VITVellore_Monarch`.
 
@@ -25,7 +25,7 @@ An IMU alone can't give centimetres, because it can't observe slow changes in po
 | Submission package | [VITVellore_Monarch.zip](https://github.com/Eeshan842004/Samsung_Monarch/releases/download/v1.1/VITVellore_Monarch.zip). **Its trajectory is from a sample input** ([why, and how to regenerate it](docs/submission/NOTE.txt)) |
 | Source code | [src/](src/), with [tests/](tests/), [tools/](tools/) and a [Dockerfile](Dockerfile) |
 | Presentation | [PDF](docs/deck/VITVellore_Monarch.pdf) or [PowerPoint](docs/deck/VITVellore_Monarch.pptx) |
-| Video | [Demo video](https://github.com/Eeshan842004/Samsung_Monarch/releases/download/v1.1/VITVellore_Monarch_demo.mp4), 2 min 21 s, captioned |
+| Video | [Watch on Google Drive](https://drive.google.com/file/d/1P01XknByXCghU8aiNOevSH-U_mkTnmx_/view?usp=sharing) or [download](https://github.com/Eeshan842004/Samsung_Monarch/releases/download/v1.1/VITVellore_Monarch_demo.mp4), 2 min 21 s, captioned |
 | AI disclosure | [AI_DISCLOSURE.md](AI_DISCLOSURE.md) |
 | README | This page. The package has [its own copy](src/README.md) |
 | APK/SDK (if any) | No APK. The [Python API](#python-api) is documented below |
@@ -101,7 +101,7 @@ It's a static page (`web/index.html` and `web/flights.json`) with no build step.
 
 ## Demo video and presentation
 
-- Video: `docs/video/VITVellore_Monarch_demo.mp4` (2 min 21 s, captioned, silent). It shows real terminal output, the live viewer and the repository ([how it was made](docs/video/README.md)).
+- Video: [watch on Google Drive](https://drive.google.com/file/d/1P01XknByXCghU8aiNOevSH-U_mkTnmx_/view?usp=sharing), also in the repository as `docs/video/VITVellore_Monarch_demo.mp4` (2 min 21 s, captioned, silent). It shows real terminal output, the live viewer and the repository ([how it was made](docs/video/README.md)).
 - Presentation: `docs/deck/VITVellore_Monarch.pptx`, with a PDF alongside.
 - AI disclosure: [AI_DISCLOSURE.md](AI_DISCLOSURE.md).
 

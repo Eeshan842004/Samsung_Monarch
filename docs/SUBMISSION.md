@@ -16,7 +16,7 @@ The form (link in the organisers' emails, shared with registered teams only) has
 | Checklist: Submission Package | `VITVellore_Monarch.zip` on the v1.1 release (sample input, see `docs/submission/NOTE.txt`) |
 | Checklist: Source Code | `src/`, `tests/`, `tools/`, `Dockerfile` |
 | Checklist: Presentation | `docs/deck/VITVellore_Monarch.pptx` and the PDF alongside |
-| Checklist: Video | `docs/video/VITVellore_Monarch_demo.mp4` (2 min 21 s, captioned, silent), also on the v1.1 release. Slide 24 asks for a YouTube or Drive link |
+| Checklist: Video | `docs/video/VITVellore_Monarch_demo.mp4` (2 min 21 s, captioned, silent), also on the v1.1 release and, as slide 24 asks, on [Google Drive](https://drive.google.com/file/d/1P01XknByXCghU8aiNOevSH-U_mkTnmx_/view?usp=sharing) |
 | Checklist: AI Disclosure | `AI_DISCLOSURE.md` |
 | Checklist: README | `README.md`, and `src/README.md` inside the zip |
 | Checklist: APK/SDK (if any) | No APK. The Python API is documented in the README |

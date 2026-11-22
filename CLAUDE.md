@@ -82,7 +82,7 @@ python tools/degrade_imu.py data/euroc/$S/imu.csv    data/euroc/$S/deg_raw.csv  
 | 1 | Reproduce the reference numbers on the official dataset downloads | `tools/final_table.py` matches `docs/SPEC.md` section 2 within 0.05 m |
 | 2 | Build and run the Docker image once | the `docker run` line above writes a trajectory with the right row count |
 | 3 | Re-run the NumPy 1.26 check on your machine (already passed on Python 3.11 + NumPy 1.26.4 during authoring) | unit and edge tests pass |
-| 4 | Team details are filled in (Team MONARCH, VIT Vellore, Eeshan, Harshita Kumar). Repository and viewer URLs are filled in (README, `src/README.md`, slide 7 of the deck); only a YouTube or Drive link for the video is left | no placeholder left (`grep -rnE "TODO[(]team"`) |
+| 4 | Team details are filled in (Team MONARCH, VIT Vellore, Eeshan, Harshita Kumar). Repository, viewer and video URLs are filled in (README, `src/README.md`, slide 7 of the deck) | no placeholder left (`grep -rnE "TODO[(]team"`) |
 | 5 | Deploy `web/` as a static site (Vercel or GitHub Pages; no build command, output directory `web`). Three demo flights are bundled in `web/flights.json` (regenerate with `python tools/export_web.py`) | the URL loads and shows the sample |
 | 6 | Run `tools/make_submission.py` on the organiser's evaluation file | zip has `estimated_trajectory.txt`, `metadata.json`, `src/main.py`, `src/seed_inversion.py`, `src/README.md`; row counts match |
 | 7 | Apply the organisers' answers (see `docs/SUBMISSION.md`, "Questions drafted") | e.g. set `"use_seed_inversion": False` in `CFG` if they object |
